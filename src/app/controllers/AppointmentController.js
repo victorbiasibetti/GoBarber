@@ -48,6 +48,11 @@ class AppointmentController {
 
     const { provider_id, date } = req.body;
 
+    if (req.userId === provider_id) {
+      return res
+        .status(401)
+        .json({ error: 'Provider and Customer is a same people' });
+    }
     // Verifica se o provider_id é de um provider
     const isProvider = await User.findOne({
       where: {
@@ -107,6 +112,16 @@ class AppointmentController {
       user: provider_id,
     });
     return res.json(appointment);
+  }
+
+  async delete(req, res) {
+    const appointment = await Appointment.findByPk(req.params.id);
+
+    if (appointment.user_id !== req.userId) {
+      console.log('prometo que implemento isso');
+    }
+
+    return res.json();
   }
 }
 
